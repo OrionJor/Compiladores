@@ -1,0 +1,58 @@
+def Prosfix(exprecao):
+    esprecao = exprecao.replace(" ", "")
+    print(exprecao)
+
+    operadores = {"+", "*", "-", "/", "(", ")"}
+    operandores_procedencia = {"+":1, "-":2, "*":3,".":3, "(":100, ")":100}
+
+    expre1 = 0
+    expre2 = 0
+    p=list()
+
+    prosfix=""
+    while len(exprecao) > 0:
+        expre1=expre2
+        expre2=0
+
+        agora=exprecao[0]
+        exprecao=exprecao[1:]
+
+        if agora in operadores:
+            expre2="operador"
+
+            if agora == "(":
+                p.append(agora)
+
+            elif agora == ")":
+                if len(p) > 0:
+                  while len(p) > 0 and p[-1] != "(":
+                    prosfix+=p.pop()
+                    if len(p) >0 and p[-1] == "(":
+                        p.pop()
+                        print(prosfix)
+                    else:
+                     print("expressão com abre ( e ) fecha incoretos")
+
+            else:
+              while len(p) > 0 and operandores_procedencia[agora] >= operandores_procedencia[p[-1]] and p[-1] not in {"(", ")"}:
+                    prosfix+=p.pop()
+              p.append(agora)
+        else:
+
+            expre2 = "operando"
+            prosfix += agora
+
+            if expre1 == expre2:
+                while len(p) > 0 and operandores_procedencia["."] <= operandores_procedencia[p[-1]] and p[-1] not in {
+                "(", ")"}:
+                    prosfix += p.pop()
+                p.append(".")
+
+
+    while len(p) > 0:
+        prosfix+=p.pop()
+        print(p)
+    print(prosfix)
+
+
+Prosfix("a+b")
