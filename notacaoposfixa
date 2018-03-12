@@ -1,0 +1,137 @@
+def infixaParaPosfixa(expressao):
+    #recebe a expressao do usuário e já eliminar os espaços
+    palavra = expressao.replace(" ","")
+    novaExpressao = ''
+    pilha = list()
+    operador = {"+",".","*"}
+    parenteses = {"(",")"}
+    precedencia = {"+":0,"-":0,".":1,"*":2,"(":3,")":3}
+    ContaSeqSimb = 0
+    contaParenteses = 0
+    tamanho = len(palavra)
+    for cont in range(tamanho):
+        # Verificando se é simbolo #
+        if palavra[cont] not in operador and palavra[cont] not in parenteses:
+            #Verificando se entrou mais de um simbolo seguido para adicionar concatenação#
+            if ContaSeqSimb > 0:
+                print("Testando a nova expressao com concatenação   ", novaExpressao)
+                if len(pilha) == 0:
+                    pilha.append('.')
+                    novaExpressao += palavra[cont]
+                elif precedencia['.'] > precedencia[pilha[len(pilha)-1]] or pilha[len(pilha)-1] in parenteses:
+                    pilha.append('.')
+                    novaExpressao += palavra[cont]
+                else:
+                    print("Teste antes do while de <= da concatenação")
+                    while precedencia['.'] <= precedencia[pilha[-1]] and pilha[-1] not in parenteses and len(pilha) > 0:
+                        novaExpressao += pilha.pop()
+                        print(novaExpressao,"  Teste dentro do while de <= da concatenação   =  ",pilha)
+                        if len(pilha) == 0:
+                            print("Teste dentro do if do while")
+                            break
+                    print("depois do whille do problema")
+                    pilha.append('.')
+                    novaExpressao += palavra[cont]
+            else:
+                print("Testando a nova expressao sem concatenação   ",novaExpressao)
+                novaExpressao += palavra[cont]
+            print("A nova expressao é: ", novaExpressao, "na interação  ", cont)
+            ContaSeqSimb = 1
+        elif palavra[cont] in parenteses:
+            print("Testando operador 1")
+            if palavra[cont] in "(":
+                print("Testando operador 2")
+                if ContaSeqSimb > 0:
+                    print("testando operador 2.2")
+                    if len(pilha) == 0:
+                        pilha.append('.')
+                        pilha.append(palavra[cont])
+                        ContaSeqSimb = 0
+                    else:
+                        if  precedencia['.'] <= precedencia[pilha[-1]]:
+                            while precedencia['.'] <= precedencia[pilha[-1]] and pilha[-1] not in parenteses and len(pilha) > 0:
+                                novaExpressao += pilha.pop()
+                                print(novaExpressao,"  Teste dentro do while de <= da (   =  ",pilha)
+                                if len(pilha) == 0:
+                                    print("Teste dentro do if do while")
+                                    pilha.append('.')
+                                    pilha.append(palavra[cont])
+                                    break
+                            pilha.append('.')
+                            pilha.append(palavra[cont])
+                            print("depois do whille do problema")
+                    ContaSeqSimb = 0
+                    contaParenteses = contaParenteses+1
+                else:
+                    print("testando primeiro ( com ContaSeqSimb == 0")
+                    pilha.append(palavra[cont])
+                    ContaSeqSimb = 0
+                    contaParenteses = contaParenteses+1
+                    print("A pilha agora é: ",pilha)
+            elif palavra[cont] == ")":
+                print("Testando operador 3")
+                ContaSeqSimb = 0
+                if len(pilha)>0:
+                    print("Testando operador 4")
+                    while len(pilha) > 0 and pilha[-1] != "(":
+                        print("Testando operador 5")
+                        if pilha[-1] == "(":
+                            print("Mostrando como a palavra está 5.2: ",novaExpressao)
+                            print("Teste do 5.2 descarta (  ",pilha)
+                            pilha.pop()
+                            break
+                        else:
+                            print("Mostrando como a palavra está 5.3.1: ", novaExpressao)
+                            novaExpressao += pilha.pop()
+                            print("Mostrando como a palavra está 5.3.2: ", novaExpressao)
+                            print("Teste 5.3 do descarta (  ", pilha)
+                    pilha.pop()
+                    contaParenteses = contaParenteses-1
+                else:
+                    print("Testando operador 6")
+                    print("teste do parenteses inverso")
+                    contaParenteses += -1
+                    if contaParenteses and -1:
+                        print("Expressao contem erro de parenteses")
+                        exit()
+        else:
+            print("Testando operador 7")
+            if len(pilha) == 0:
+                pilha.append(palavra[cont])
+            elif precedencia[palavra[cont]] <= precedencia[pilha[-1]] and pilha[-1] not in parenteses:#modificando aqui
+                print("teste do elif dos operadores")
+                print("a pilha agora é : ",pilha)
+                while precedencia[palavra[cont]] <= precedencia[pilha[-1]] and pilha[-1] not in parenteses:
+                    novaExpressao += pilha.pop()
+                    if len(pilha) == 0 or pilha[-1] == "(":
+                        print("Teste dentro do if do while")
+                        break
+                pilha.append(palavra[cont])
+            else:
+                pilha.append(palavra[cont])
+            print(cont,"   Mostrando a pilha a cada interação ",pilha)
+            if palavra[cont] != '*':
+                ContaSeqSimb = 0
+                print(" teste do estrela para concatenação, ContaSeqSimbolo = ", ContaSeqSimb)
+            else:
+                if ContaSeqSimb ==1:
+                    ContaSeqSimb = 1
+    if contaParenteses == 0:
+        while len(pilha) > 0:
+            novaExpressao += pilha.pop()
+        print("A nova expressao é: ",novaExpressao)
+    else:
+        print("A exprressao contem erro")
+    pilha.clear()
+
+# Variável opção criada para verificar até quando o while que mostra as opções deve ser exibido.
+opcao = 1
+# Menu de Opções
+while(opcao != '0'):
+    # expressao recebe a entrada digitada pelo usuário
+    expressao = input("Digite a expressao a ser convertida:")
+    #Chama a função que passará a expressao para posfixa
+    infixaParaPosfixa(expressao)
+    opcao = input('\nDigite 0 para SAIR ou outro valor para testar uma nova expressão:\n')
+
+print("Programa finalizado com êxito")
