@@ -1,3 +1,5 @@
+
+
 def Prosfix(exprecao):
     esprecao = exprecao.replace(" ", "")
     i=0
@@ -35,6 +37,7 @@ def Prosfix(exprecao):
          agora = exprecao[0]
          exprecao = exprecao[1:]
 
+
          if agora in operadores:
 
              if agora == "(":
@@ -58,10 +61,10 @@ def Prosfix(exprecao):
              prosfix += agora
              agora=0
              if expre1 == operadores:
-                 while len(p) > 0 and operandores_procedencia["."] >= operandores_procedencia[p[-1]] and p[-1] not in {
+                 while len(p) > 0 and p[-1] not in {
                      "(", ")"}:
                      prosfix += p.pop()
-                 p.append(".")
+
 
      while len(p) > 0:
          prosfix += p.pop()
@@ -70,4 +73,3 @@ def Prosfix(exprecao):
 
 
 Prosfix("a+b")
-
