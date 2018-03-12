@@ -1,7 +1,6 @@
 def Prosfix(exprecao):
     esprecao = exprecao.replace(" ", "")
-
-
+    i=0
     i= len(exprecao)
     operadores = {"+", "*", "-", "/", "(", ")"}
     operandores_procedencia = {"+":1, "-":2, "*":3,".":3, "(":100, ")":100}
@@ -13,18 +12,20 @@ def Prosfix(exprecao):
     p=list()
     p2=list()
 
+
     j = 0
     while i>0:
 
        if exprecao[j] == "(":
          verificadoabre =verificadoabre + 1
-       elif exprecao[j]==")":
+       elif exprecao[j]== ")":
          verificadoabre =verificadoabre - 1
-       j = j + 1
        i = i - 1
+       j = j + 1
 
-    if verificadoabre != 0:
-     print("expressão com abre ( e ) fecha incoretos")
+
+    if verificadoabre !=0:
+       print("expressão com abre ( e ) fecha incoretos")
     else:
      prosfix = ""
      while len(exprecao) > 0:
@@ -47,8 +48,6 @@ def Prosfix(exprecao):
                          if len(p) > 0 and p[-1] == "(":
                              p.pop()
                              print(prosfix)
-                         else:
-                             print("expressão com abre ( e ) fecha incoretos")
 
              else:
                  while len(p) > 0 and operandores_procedencia[agora] >= operandores_procedencia[p[-1]] and p[
@@ -61,7 +60,7 @@ def Prosfix(exprecao):
              prosfix += agora
 
              if expre1 == expre2:
-                 while len(p) > 0 and operandores_procedencia["."] <= operandores_procedencia[p[-1]] and p[-1] not in {
+                 while len(p) > 0 and operandores_procedencia["."] >= operandores_procedencia[p[-1]] and p[-1] not in {
                      "(", ")"}:
                      prosfix += p.pop()
                  p.append(".")
