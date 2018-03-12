@@ -2,10 +2,11 @@ def Prosfix(exprecao):
     esprecao = exprecao.replace(" ", "")
     i=0
     i= len(exprecao)
-    operadores = {"+", "*", "-", "/", "(", ")"}
-    operandores_procedencia = {"+":1, "-":2, "*":3,".":3, "(":100, ")":100}
+    operadores = {"+", "*", "-", "/","^", "(", ")"}
+    operandores_procedencia = {"+":1, "-":2,"/":3, "*":4,".":5,"^":6, "(":10, ")":10}
 
     verificadoabre=0
+    verificadoOp=0
 
     expre1 = 0
     expre2 = 0
@@ -29,14 +30,12 @@ def Prosfix(exprecao):
     else:
      prosfix = ""
      while len(exprecao) > 0:
-         expre1 = expre2
-         expre2 = 0
+         expre1 = exprecao
 
          agora = exprecao[0]
          exprecao = exprecao[1:]
 
          if agora in operadores:
-             expre2 = "operador"
 
              if agora == "(":
                  p.append(agora)
@@ -50,16 +49,15 @@ def Prosfix(exprecao):
                              print(prosfix)
 
              else:
-                 while len(p) > 0 and operandores_procedencia[agora] >= operandores_procedencia[p[-1]] and p[
+                 while len(p) > 0 and operandores_procedencia[agora] <= operandores_procedencia[p[-1]] and p[
                      -1] not in {"(", ")"}:
                      prosfix += p.pop()
                  p.append(agora)
          else:
 
-             expre2 = "operando"
              prosfix += agora
-
-             if expre1 == expre2:
+             agora=0
+             if expre1 == operadores:
                  while len(p) > 0 and operandores_procedencia["."] >= operandores_procedencia[p[-1]] and p[-1] not in {
                      "(", ")"}:
                      prosfix += p.pop()
@@ -71,4 +69,5 @@ def Prosfix(exprecao):
      print(prosfix)
 
 
-Prosfix("a+b")
+Prosfix("a^b*c-d+e/f/(g+h)")
+
