@@ -69,5 +69,5 @@ def Prosfix(exprecao):
      print(prosfix)
 
 
-Prosfix("a^b*c-d+e/f/(g+h)")
+Prosfix("a+b")
 
