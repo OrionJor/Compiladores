@@ -1,0 +1,103 @@
+def infixaParaPosfixa(expressao):
+    #recebe a expressao do usuário e já eliminar os espaços
+    palavra = expressao.replace(" ","")
+    novaExpressao = ''
+    pilha = list()
+    operador = {"+",".","*"}
+    parenteses = {"(",")"}
+    precedencia = {"+":0,"-":0,".":1,"*":2,"(":3,")":3}
+    ContaSeqSimb = 0
+    contaParenteses = 0
+    tamanho = len(palavra)
+    for cont in range(tamanho):
+        # Verificando se é simbolo #
+        if palavra[cont] not in operador and palavra[cont] not in parenteses:
+            #Verificando se entrou mais de um simbolo seguido para adicionar concatenação#
+            if ContaSeqSimb > 0:
+                if len(pilha) == 0:
+                    pilha.append('.')
+                    novaExpressao += palavra[cont]
+                elif precedencia['.'] > precedencia[pilha[len(pilha)-1]] or pilha[len(pilha)-1] in parenteses:
+                    pilha.append('.')
+                    novaExpressao += palavra[cont]
+                else:
+                    while precedencia['.'] <= precedencia[pilha[-1]] and pilha[-1] not in parenteses and len(pilha) > 0:
+                        novaExpressao += pilha.pop()
+                        if len(pilha) == 0:
+                            break
+                    pilha.append('.')
+                    novaExpressao += palavra[cont]
+            else:
+                novaExpressao += palavra[cont]
+            ContaSeqSimb = 1
+        elif palavra[cont] in parenteses:
+            if palavra[cont] in "(":
+                if ContaSeqSimb > 0:
+                    if len(pilha) == 0:
+                        pilha.append('.')
+                        pilha.append(palavra[cont])
+                        ContaSeqSimb = 0
+                    else:
+                        if  precedencia['.'] <= precedencia[pilha[-1]]:
+                            while precedencia['.'] <= precedencia[pilha[-1]] and pilha[-1] not in parenteses and len(pilha) > 0:
+                                novaExpressao += pilha.pop()
+                                if len(pilha) == 0:
+                                    pilha.append('.')
+                                    pilha.append(palavra[cont])
+                                    break
+                            pilha.append('.')
+                            pilha.append(palavra[cont])
+                    ContaSeqSimb = 0
+                    contaParenteses = contaParenteses+1
+                else:
+                    pilha.append(palavra[cont])
+                    ContaSeqSimb = 0
+                    contaParenteses = contaParenteses+1
+            elif palavra[cont] == ")":
+                ContaSeqSimb = 1
+                if len(pilha)>0:
+                    while len(pilha) > 0 and pilha[-1] != "(":
+                        if pilha[-1] == "(":
+                            pilha.pop()
+                            break
+                        else:
+                            novaExpressao += pilha.pop()
+                    if len(pilha)>0:
+                        pilha.pop()
+                    else:
+                        print("expressao inválida")
+                    contaParenteses = contaParenteses-1
+                else:
+                    contaParenteses += -1
+                    if contaParenteses and -1:
+                        #print("Expressao contem erro de parenteses")
+                        return ''
+                        exit()
+        else:
+            if len(pilha) == 0:
+                pilha.append(palavra[cont])
+            elif precedencia[palavra[cont]] <= precedencia[pilha[-1]] and pilha[-1] not in parenteses:#modificando aqui
+                while precedencia[palavra[cont]] <= precedencia[pilha[-1]] and pilha[-1] not in parenteses:
+                    novaExpressao += pilha.pop()
+                    if len(pilha) == 0 or pilha[-1] == "(":
+                        break
+                pilha.append(palavra[cont])
+            else:
+                pilha.append(palavra[cont])
+            if palavra[cont] != '*':
+                ContaSeqSimb = 0
+            else:
+                if ContaSeqSimb ==1:
+                    ContaSeqSimb = 1
+    if contaParenteses == 0:
+        while len(pilha) > 0:
+            novaExpressao += pilha.pop()
+        #print("A nova expressao é: ",novaExpressao)
+        return novaExpressao
+    else:
+        #print("A exprressao contem erro")
+        pilha.clear()
+        return ''
+
+infixaParaPosfixa("")
+print("Conversão finalizado com êxito")
