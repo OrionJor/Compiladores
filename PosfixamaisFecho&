@@ -206,6 +206,8 @@ def MostaFechosE(fechosE):
 	return(Resultados)
 
 from notacaoposfixa import infixaParaPosfixa
+
+
 expressao = infixaParaPosfixa("a+b")
 
 print(MostaFechosE(FechoE((percorreExpressao(expressao)))))
