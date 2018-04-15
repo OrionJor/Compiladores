@@ -177,33 +177,31 @@ def printPilha(pilha):
     final = str("\n######## AUTOMATO FINITO NAO DETERMINISTICO COM MOV. & ########\n") + final
     return final
 
-def FechoE(pilhaAltomato):
-	VetorFecho = []
+def FechoE(pilha):
+	FechosE = []
 
-	for i in range(0, pilhaAltomato[0].qtEstados):
-		VetorFecho.append([pilhaAltomato[0].estados[i]])
+	for x in range(0,pilha[0].qtEstados):
+		FechosE.append([pilha[0].estados[x]])
 
-		for i in range(0, len(pilhaAltomato[0].Transicoes)):
-			if pilhaAltomato[0].estados[i] == pilhaAltomato[0].Transicoes[i][1] and pilhaAltomato[0].Transicoes[i][0] == "&":
-				if pilhaAltomato[0].estados[i] != pilhaAltomato[0].estadosFinal:
-					VetorFecho[i].append(pilhaAltomato[0].Transicoes[i][2])
+		for i in range(0,len(pilha[0].Transicoes)):
+			if pilha[0].estados[x] == pilha[0].Transicoes[i][1] and pilha[0].Transicoes[i][0] == "&":
+				if pilha[0].estados[x] != pilha[0].estadosFinal:
+					FechosE[x].append(pilha[0].Transicoes[i][2])
 
-					for j in range(i, len(pilhaAltomato[0].Transicoes)):
-							if(pilhaAltomato[0].Transicoes[i][2] == pilhaAltomato[0].Transicoes[j][1] and pilhaAltomato[0].Transicoes[j][0] == "&"):
-								if pilhaAltomato[0].Transicoes[i][2] != pilhaAltomato[0].estadosFinal:
-									VetorFecho[i].insert(-1, pilhaAltomato[0].Transicoes[j][2])
+					for j in range(x,len(pilha[0].Transicoes)):
+							if(pilha[0].Transicoes[i][2] == pilha[0].Transicoes[j][1] and pilha[0].Transicoes[j][0] == "&"):
+								if pilha[0].Transicoes[i][2] != pilha[0].estadosFinal:
+									FechosE[x].insert(-1,pilha[0].Transicoes[j][2])
 
-	return VetorFecho
+	return FechosE
 
-def MostaFechosE(fechos):
-	print("\nContagem de Fecho-&")
-
+def MostaFechosE(fechosE):
 	Resultados = ""
-	for i in range(0,len(fechos)):
-		Resultados = Resultados + "Fecho-&" + "(q"+str(fechos[i][0].nome) + ") = {"
-		for j in range(0,len(fechos[i])):
-			Resultados = Resultados+"q" + str(fechos[i][j].nome) + ","
-		Resultados = Resultados+ "}" + "\n"
+	for i in range(0, len(fechosE)):
+		Resultados = Resultados + "Fecho-&" + "(" + str(fechosE[i][0].nome) + ") = {"
+		for j in range(0, len(fechosE[i])):
+			Resultados = Resultados +"q" + str(fechosE[i][j].nome) + ","
+		Resultados = Resultados +"}" + "\n"
 
 	return(Resultados)
 
