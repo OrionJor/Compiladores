@@ -198,7 +198,7 @@ def FechoE(pilha):
 def MostaFechosE(fechosE):
 	Resultados = ""
 	for i in range(0, len(fechosE)):
-		Resultados = Resultados + "Fecho-&" + "(" + str(fechosE[i][0].nome) + ") = {"
+		Resultados = Resultados + "Fecho-&" + "(q" + str(fechosE[i][0].nome) + ") = {"
 		for j in range(0, len(fechosE[i])):
 			Resultados = Resultados +"q" + str(fechosE[i][j].nome) + ","
 		Resultados = Resultados +"}" + "\n"
