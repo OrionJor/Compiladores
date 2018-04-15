@@ -1,0 +1,212 @@
+def operadores(char):
+    TodosOperadores = '+*.'
+    for i in range(0, len(TodosOperadores)):
+        if char == TodosOperadores[i]:
+            valor = True
+            return True
+        else:
+            valor = False
+    return (valor)
+
+class Automato(object):
+
+    def __init__(self):
+        self.alfabeto = None
+        self.estados = Estados()
+        self.estados = []
+        self.qtEstados = None
+        self.Transicoes = []
+        self.estadoInicial = None
+        self.estadosFinal = None
+
+class Estados(object):
+
+    def __init__(self):
+        self.nome = 0
+
+def baseF(simbolo):
+    base = Automato()
+    base.alfabeto = simbolo
+    base.qtEstados = 2
+    base.estados = [Estados()] * base.qtEstados
+    base.estados[0] = Estados()
+    base.estados[1] = Estados()
+    base.estados[0].nome = 0
+    base.estados[1].nome = 1
+    base.Transicoes.append([simbolo, base.estados[0], base.estados[1]])
+    base.estadoInicial = base.estados[0]
+    base.estadosFinal = base.estados[1]
+    return base
+
+def uneAlfabetos(a, b):
+    return a + b
+
+def distibuiChars(lista1, lista2):
+    for i in range(0, len(lista1)):
+        lista2.append(lista1[i])
+    return lista2
+
+def concatenacao(a, b):
+    novo = Automato()
+    novo.alfabeto = uneAlfabetos(a.alfabeto, b.alfabeto)
+    novo.qtEstados = a.qtEstados + b.qtEstados
+
+    for j in range(0, len(a.Transicoes)):
+        novo.Transicoes.append([a.Transicoes[j][0], a.Transicoes[j][1], a.Transicoes[j][2]])
+
+    for j in range(0, len(a.estados)):
+        novo.estados.append(a.estados[j])
+
+    novo.Transicoes.append(["&", a.estadosFinal, b.estadoInicial])
+
+    for j in range(0, len(b.Transicoes)):
+        novo.Transicoes.append([b.Transicoes[j][0], b.Transicoes[j][1], b.Transicoes[j][2]])
+
+    for j in range(0, len(b.estados)):
+        novo.estados.append(b.estados[j])
+
+
+    novo.estadoInicial = novo.estados[0]
+    novo.estadosFinal = novo.estados[-1]
+
+    for i in range(0, len(novo.estados)):
+        novo.estados[i].nome = i
+
+    return novo
+
+def uniao(A, B):
+    novo = Automato()
+    novo.alfabeto = uneAlfabetos(A.alfabeto, B.alfabeto)
+    novo.qtEstados = A.qtEstados + B.qtEstados + 2
+    novoEstadoI = Estados()
+    novoEstadoF = Estados()
+
+    novo.estados.append(novoEstadoI)
+
+    for j in range(0, len(A.Transicoes)):
+        novo.Transicoes.append([A.Transicoes[j][0], A.Transicoes[j][1], A.Transicoes[j][2]])
+
+    for j in range(0, len(A.estados)):
+        novo.estados.append(A.estados[j])
+
+    for j in range(0, len(B.Transicoes)):
+        novo.Transicoes.append([B.Transicoes[j][0], B.Transicoes[j][1], B.Transicoes[j][2]])
+
+    for j in range(0, len(B.estados)):
+        novo.estados.append(B.estados[j])
+
+    novo.estados.append(novoEstadoF)
+    novo.Transicoes.append(["&", novo.estados[0], A.estadoInicial])
+    novo.Transicoes.append(["&", novo.estados[0], B.estadoInicial])
+    novo.Transicoes.append(["&", A.estadosFinal, novo.estados[-1]])
+    novo.Transicoes.append(["&", B.estadosFinal, novo.estados[-1]])
+    novo.estadoInicial = novo.estados[0]
+    novo.estadosFinal = novo.estados[-1]
+
+    for i in range(0, len(novo.estados)):
+        novo.estados[i].nome = i
+
+    return novo
+
+def fechoKlene(A):
+    novo = Automato()
+    novo.alfabeto = uneAlfabetos(A.alfabeto, "")
+    novo.qtEstados = A.qtEstados + 2
+    novoEstadoI = Estados()
+    novoEstadoF = Estados()
+
+    novo.estados.append(novoEstadoI)
+
+    for j in range(0, len(A.Transicoes)):
+        novo.Transicoes.append([A.Transicoes[j][0], A.Transicoes[j][1], A.Transicoes[j][2]])
+
+    for j in range(0, len(A.estados)):
+        novo.estados.append(A.estados[j])
+
+    novo.estados.append(novoEstadoF)
+
+    novo.Transicoes.append(["&", novo.estados[0], A.estadoInicial])
+    novo.Transicoes.append(["&", novo.estados[0], novo.estados[-1]])
+    novo.Transicoes.append(["&", A.estadoInicial, A.estadosFinal])
+    novo.Transicoes.append(["&", A.estadosFinal, novo.estados[-1]])
+
+    novo.estadoInicial = novo.estados[0]
+    novo.estadosFinal = novo.estados[-1]
+
+    for i in range(0, len(novo.estados)):
+        novo.estados[i].nome = i
+
+    return novo
+
+def percorreExpressao(expressao):
+    pilha = []
+    for i in range(0, len(expressao)):
+        if not operadores(expressao[i]):
+            pilha.append(baseF(expressao[i]))
+        elif operadores(expressao[i]):
+            if (expressao[i] == "*"):
+                op1 = pilha.pop(-1)
+                pilha.append(fechoKlene(op1))
+            else:
+                op2 = pilha.pop(-1)
+                if pilha:
+                    op1 = pilha.pop(-1)
+                    if expressao[i] == ".":
+                        pilha.append(concatenacao(op1, op2))
+                    elif expressao[i] == "+":
+                        pilha.append(uniao(op1, op2))
+    return pilha
+
+
+
+def printPilha(pilha):
+    final = ''
+    for i in range(0, len(pilha[0].Transicoes)):
+        if pilha[0].Transicoes[i][1].nome == 0:
+            final = str(pilha[0].Transicoes[i][0]) + "------------------------------> ->q" + str(
+                pilha[0].Transicoes[i][1].nome) + " => q" + str(pilha[0].Transicoes[i][2].nome) + "\n" + final
+        else:
+            j = len(pilha[0].Transicoes)
+            if i == j - 1:
+                final = final + str(pilha[0].Transicoes[i][0]) + "------------------------------>   q" + str(
+                    pilha[0].Transicoes[i][1].nome) + " => q" + str(pilha[0].Transicoes[i][2].nome) + "\n"
+                final = final + "                                  *q" + str(pilha[0].Transicoes[i][2].nome)
+            else:
+                final = final + str(pilha[0].Transicoes[i][0]) + "------------------------------>   q" + str(
+                    pilha[0].Transicoes[i][1].nome) + " => q" + str(pilha[0].Transicoes[i][2].nome) + "\n"
+    final = str("\n######## AUTOMATO FINITO NAO DETERMINISTICO COM MOV. & ########\n") + final
+    return final
+
+def FechoE(pilhaAltomato):
+	VetorFecho = []
+
+	for i in range(0, pilhaAltomato[0].qtEstados):
+		VetorFecho.append([pilhaAltomato[0].estados[i]])
+
+		for i in range(0, len(pilhaAltomato[0].Transicoes)):
+			if pilhaAltomato[0].estados[i] == pilhaAltomato[0].Transicoes[i][1] and pilhaAltomato[0].Transicoes[i][0] == "&":
+				if pilhaAltomato[0].estados[i] != pilhaAltomato[0].estadosFinal:
+					VetorFecho[i].append(pilhaAltomato[0].Transicoes[i][2])
+
+					for j in range(i, len(pilhaAltomato[0].Transicoes)):
+							if(pilhaAltomato[0].Transicoes[i][2] == pilhaAltomato[0].Transicoes[j][1] and pilhaAltomato[0].Transicoes[j][0] == "&"):
+								if pilhaAltomato[0].Transicoes[i][2] != pilhaAltomato[0].estadosFinal:
+									VetorFecho[i].insert(-1, pilhaAltomato[0].Transicoes[j][2])
+
+	return VetorFecho
+
+def MostaFechosE(fechos):
+	print("\nContagem de Fecho-&")
+
+	Resultados = ""
+	for i in range(0,len(fechos)):
+		Resultados = Resultados + "Fecho-&" + "(q"+str(fechos[i][0].nome) + ") = {"
+		for j in range(0,len(fechos[i])):
+			Resultados = Resultados+"q" + str(fechos[i][j].nome) + ","
+		Resultados = Resultados+ "}" + "\n"
+
+	return(Resultados)
+
+expressao="ab+"
+print(MostaFechosE(FechoE((percorreExpressao(expressao)))))
+print(printPilha(percorreExpressao(expressao)))
