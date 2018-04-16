@@ -196,13 +196,14 @@ def FechoE(pilha):
 	return FechosE
 
 def MostaFechosE(fechosE):
-	Resultados = ""
-	for i in range(0, len(fechosE)):
-		Resultados = Resultados + "Fecho-&" + "(q" + str(fechosE[i][0].nome) + ") = {"
-		for j in range(0, len(fechosE[i])):
-			Resultados = Resultados +"q" + str(fechosE[i][j].nome) + ","
-		Resultados = Resultados +"}" + "\n"
-
+	Resultados = "\nTransições dos Fechos-&\n"
+    	for i in range(0, len(fechosE)):
+        	Resultados = Resultados + "Fecho-&" + "(q" + str(fechosE[i][0].nome) + ") = {"
+        for j in range(0, len(fechosE[i])):
+    	    if j>0:
+                Resultados = Resultados + ","
+            Resultados = Resultados +"q" + str(fechosE[i][j].nome)
+        Resultados = Resultados +"}" + "\n"
 	return(Resultados)
 
 from notacaoposfixa import infixaParaPosfixa
@@ -212,3 +213,27 @@ expressao = infixaParaPosfixa("a+b")
 
 print(MostaFechosE(FechoE((percorreExpressao(expressao)))))
 print(printPilha(percorreExpressao(expressao)))
+
+def AFD(fechosE,pilha):
+    AFD = Automato()
+    novo = Automato()
+    novo.alfabeto = pilha[0].alfabeto
+    prin = ''
+    novo.Transicoes = fechosE
+    print(novo.alfabeto)
+    print("tamanho do Fafn " + str(len(fechosE)))
+    for i in range(0,len(fechosE)):
+        for j in range(0,len(fechosE(i))):
+            prin += "," + str(fechosE[i][j].nome)
+    print(prin)
+    #for i in range(0,len(pilha[0].estados)):
+        #print("==========")
+        #print("")
+        #AFD.append(pilha[0].estados[i])
+        #print(str(AFD[0]))
+        #for j in range(0,len(novo.alfabeto)):
+            #prin = str(AFD[i].estados[i][j].nome)
+            #print(prin)
+            #Fafn[i][j] += str(fechosE[i][j].nome)
+
+
