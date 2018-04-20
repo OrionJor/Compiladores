@@ -266,6 +266,7 @@ def AFD(fechosE,pilha):
                      if Resultados[l] != "}":
                         fechosEs.insert(Resultados[l])
             # e Salvar em uma lista e comerçar o processo novamentes
+	    #Depois voçê arrumar em uma matriz os dados e ainda falta mais uma comparação!
 
 print(AFD(FechoE((percorreExpressao(expressao))), percorreExpressao(expressao)))
 
