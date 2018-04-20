@@ -226,14 +226,48 @@ def AFD(fechosE,pilha):
         for j in range(0,len(fechosE(i))):
             prin += "," + str(fechosE[i][j].nome)
     print(prin)
-    #for i in range(0,len(pilha[0].estados)):
-        #print("==========")
-        #print("")
-        #AFD.append(pilha[0].estados[i])
-        #print(str(AFD[0]))
-        #for j in range(0,len(novo.alfabeto)):
-            #prin = str(AFD[i].estados[i][j].nome)
-            #print(prin)
-            #Fafn[i][j] += str(fechosE[i][j].nome)
+   
+   #def AFD(fechosE,pilha):
+    fechosEs=[]
+    tamanho =len(pilha[0].alfabeto)
+    j=0
+    Resultados = ""
+    PrimeroEstado=[]
+    PrimeroEstadoAux=""
+    for i in range(0, len(fechosE)):
+        Resultados = Resultados
+        for j in range(0, len(fechosE[i])):
+            Resultados = Resultados + str(fechosE[i][j].nome)
+            if i == 0:
+             PrimeroEstado.append(Resultados[j])
+             PrimeroEstadoAux=Resultados
+        Resultados = Resultados + "}" + "\n"
 
+
+    comparacaoAlfabeto = ""
+    comparacaoEstado=""
+    transicaoAtual=""
+    k=0
+    l=0
+    final =""
+    g=0
+    for i in range(0, tamanho):
+        comparacaoAlfabeto = pilha[0].alfabeto[i]
+        for j in range(0, len(PrimeroEstado)):
+              comparacaoEstado=PrimeroEstado[j]
+              for k in range(0, len(pilha[0].Transicoes)):
+                  if str(pilha[0].Transicoes[k][1].nome) == comparacaoEstado:
+                      if pilha[0].Transicoes[k][0]==comparacaoAlfabeto:
+                          transicaoAtual = pilha[0].Transicoes[k][2].nome
+
+              #Agora só pegar os fechos estou tentando aqui mais não está dando certo não sei por que!
+              for l in range(0,len(Resultados)):
+                  if Resultados == 0 :
+                     if Resultados[l] != "}":
+                        fechosEs.insert(Resultados[l])
+            # e Salvar em uma lista e comerçar o processo novamentes
+
+print(AFD(FechoE((percorreExpressao(expressao))), percorreExpressao(expressao)))
+
+print(printPilha(percorreExpressao(expressao)))
 
