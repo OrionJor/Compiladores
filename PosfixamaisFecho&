@@ -39,7 +39,14 @@ def baseF(simbolo):
     return base
 
 def uneAlfabetos(a, b):
-    return a + b
+    char = True
+    for l in a:
+        if l == b:
+            char = False
+    if char == True:
+        return a+b
+    else:
+        return a
 
 def distibuiChars(lista1, lista2):
     for i in range(0, len(lista1)):
