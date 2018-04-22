@@ -222,31 +222,18 @@ print(MostaFechosE(FechoE((percorreExpressao(expressao)))))
 print(printPilha(percorreExpressao(expressao)))
 
 def AFD(fechosE,pilha):
-    AFD = Automato()
-    novo = Automato()
-    novo.alfabeto = pilha[0].alfabeto
-    prin = ''
-    novo.Transicoes = fechosE
-    print(novo.alfabeto)
-    print("tamanho do Fafn " + str(len(fechosE)))
-    for i in range(0,len(fechosE)):
-        for j in range(0,len(fechosE(i))):
-            prin += "," + str(fechosE[i][j].nome)
-    print(prin)
-   
-   #def AFD(fechosE,pilha):
     fechosEs=[]
     tamanho =len(pilha[0].alfabeto)
     j=0
     Resultados = ""
-    PrimeroEstado=[]
+    PrimeroEstadoNext=[]
     PrimeroEstadoAux=""
     for i in range(0, len(fechosE)):
         Resultados = Resultados
         for j in range(0, len(fechosE[i])):
             Resultados = Resultados + str(fechosE[i][j].nome)
             if i == 0:
-             PrimeroEstado.append(Resultados[j])
+             PrimeroEstadoNext.append(Resultados[j])
              PrimeroEstadoAux=Resultados
         Resultados = Resultados + "}" + "\n"
 
@@ -255,25 +242,33 @@ def AFD(fechosE,pilha):
     comparacaoEstado=""
     transicaoAtual=""
     k=0
-    l=0
-    final =""
-    g=0
+    g=""
     for i in range(0, tamanho):
         comparacaoAlfabeto = pilha[0].alfabeto[i]
-        for j in range(0, len(PrimeroEstado)):
-              comparacaoEstado=PrimeroEstado[j]
+        for j in range(0, len(PrimeroEstadoNext)):
+              comparacaoEstado=PrimeroEstadoNext[j]
               for k in range(0, len(pilha[0].Transicoes)):
                   if str(pilha[0].Transicoes[k][1].nome) == comparacaoEstado:
                       if pilha[0].Transicoes[k][0]==comparacaoAlfabeto:
-                          transicaoAtual = pilha[0].Transicoes[k][2].nome
+                          transicaoAtual=pilha[0].Transicoes[k][2].nome
+                        #Agora só pegar os fechos estou tentando aqui mais não está dando certo não sei por que!
+                          for l in range(0, len(fechosE)):
+                              if fechosE[l][0].nome == transicaoAtual:
+                                 for m in range(0,len(fechosE[l])):
+                                     g=str(fechosE[l][m].nome)
+                                     fechosEs.append(g)
+                      else:
+                       fechosEs.append('')
+                       break
 
-              #Agora só pegar os fechos estou tentando aqui mais não está dando certo não sei por que!
-              for l in range(0,len(Resultados)):
-                  if Resultados == 0 :
-                     if Resultados[l] != "}":
-                        fechosEs.insert(Resultados[l])
+        fechosEs.append('|')
+              #for n in range(0,len(PrimeroEstadoNext)):
+                 #if PrimeroEstadoNext[n] != fechosEs[n]:
+                    #if fechosEs[n] != '|':
+                       #PrimeroEstadoNext.append(fechosEs[j])
+    print(fechosEs)
+
             # e Salvar em uma lista e comerçar o processo novamentes
-	    #Depois voçê arrumar em uma matriz os dados e ainda falta mais uma comparação!
 
 print(AFD(FechoE((percorreExpressao(expressao))), percorreExpressao(expressao)))
 
