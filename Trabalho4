@@ -1,0 +1,119 @@
+import re
+import sys
+
+
+class ErroLexico(Exception):
+    """Exceção de erro Lexer.
+
+        prox:
+            Posicione na linha de entrada onde o erro ocorreu.
+    """
+    def __init__(self, pos):
+        self.prox = pos
+
+
+class IinicializaVerificaErros(object):
+    """ Uma estrutura simples de Token.
+        Contém o tipo de token, valor e posição.
+    """
+    def __init__(self, tipo, valor, prox):
+        self.tipo = tipo
+        self.valor = valor
+        self.prox = prox
+
+    def __str__(self):
+        return '%s(%s) at %s' % (self.tipo, self.valor, self.prox)
+
+class Lexer(object):
+    """ Um simples lexer / tokenizer baseado em regex.
+
+        Veja abaixo um exemplo de uso.
+    """
+    def __init__(self, rules, espaco_emBranco=True):
+        """ Crie um léxico.
+
+            regras:
+                Uma lista de regras. Cada regra é um `regex, tipo`
+                par, onde `regex` é a expressão regular usada
+                reconhecer o token e `type` é o tipo
+                do token para retornar quando é reconhecido.
+
+            skip_whitespace:
+                Se for True, o espaço em branco (\ s +) será ignorado e não
+                relatado pelo lexer. Caso contrário, você tem que
+                especificar suas regras para espaço em branco, ou será
+                marcado como um erro.
+        """
+        self.tokes = []
+
+        for regex, tipo in rules:
+            self.tokes.append((re.compile(regex), tipo))
+
+        self.espaco_branco = espaco_emBranco
+        self.spaco_branco = re.compile('\S')
+
+    def entrada(self, buff):
+        """ "Inicialize o lexer com um buffer como entrada.
+        """
+        self.buff = buff
+        self.prox = 0
+
+    def token(self):
+        """ Retorna o próximo token (um objeto Token) encontrado no
+            buffer de entrada. Nenhum é retornado se o final do
+            buffer foi atingido.
+            Em caso de erro de digitação (o pedaço atual do
+            buffer corresponde a nenhuma regra), um LexerError é gerado com
+            a posição do erro.
+        """
+        if self.prox >= len(self.buff):
+            return None
+        else:
+            if self.espaco_branco:
+                t = self.spaco_branco.search(self.buff[self.prox:])
+
+                if t:
+                    self.prox += t.start()
+                else:
+                    return None
+
+            for token_regex, token_tipo in self.tokes:
+                t = token_regex.match(self.buff[self.prox:])
+
+                if t:
+                    valor = self.buff[self.prox + t.start():self.prox + t.end()]
+                    tok = IinicializaVerificaErros(token_tipo, valor, self.prox)
+                    self.prox += t.end()
+                    return tok
+
+            # se estivermos aqui, nenhuma regra corresponde
+            raise ErroLexico(self.prox)
+
+    def tokens(self):
+        """ Retorna um iterador para os tokens encontrados no buffer.
+        """
+        while 1:
+            tok = self.token()
+            if tok is None:
+                break
+            yield tok
+
+
+if __name__ == '__main__':
+    tokes = [
+        ('([0-9]+)',            'NUMEROS'),
+        ('[a-zA-Z]\w*',            'ID'),
+        ('([-+])',                  'OP1'),
+        ('([/\*])',                 'OP2'),
+        ('(\()',                    'OP2'),
+        
+    ]
+
+    l = Lexer(tokes, espaco_emBranco=True)
+    l.entrada('ma in')
+
+    try:
+        for toks in l.tokens():
+            print(toks.tipo,'('+toks.valor+')')
+    except ErroLexico as err:
+        print('Erro de Digitação', err.prox)
