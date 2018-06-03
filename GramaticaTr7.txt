@@ -1,0 +1,11 @@
+G = (N,T,P,S)
+N = {S,A,B,C,D,E}
+T = {a,b,c,d,e}
+P = { 
+S -> ABCDE
+A -> a | &
+B -> b | &
+C -> c
+D -> d | &
+E -> e | &
+}
