@@ -1,5 +1,5 @@
 G = (N,T,P,S)
-N = {S,A,B,C,D,E}
+V = {S,A,B,C,D,E}
 T = {a,b,c,d,e}
 P = { 
 S -> ABCDE
