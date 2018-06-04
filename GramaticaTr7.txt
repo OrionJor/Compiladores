@@ -1,4 +1,4 @@
-G = (N,T,P,S)
+G = (V,T,P,S)
 V = {S,A,B,C,D,E}
 T = {a,b,c,d,e}
 P = { 
